@@ -9,13 +9,42 @@ export default function UploadPage() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [docFile, setDocFile] = useState<File | null>(null);
   const [backendStatus, setBackendStatus] = useState<string>("");
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
 
-useEffect(() => {
-  fetch("http://localhost:5000")
-    .then((res) => res.json())
-    .then((data) => setBackendStatus(data.status))
-    .catch(() => setBackendStatus("Backend not reachable"));
-}, []);
+  const uploadFile = async (file: File) => {
+    setUploading(true);
+    setMessage("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      setMessage(data.message || "Upload completed");
+    } catch (err) {
+      setMessage("Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetch("http://localhost:5000")
+      .then((res) => res.json())
+      .then((data) => setBackendStatus(data.status))
+      .catch(() => setBackendStatus("Backend not reachable"));
+  }, []);
+
+
+
 
   return (
     <div className="space-y-10">
@@ -67,6 +96,17 @@ useEffect(() => {
               hidden
               onChange={(e) => setAudioFile(e.target.files?.[0] || null)}
             />
+
+            {audioFile && (
+              <button
+                onClick={() => uploadFile(audioFile)}
+                disabled={uploading}
+                className="mt-4 w-full rounded-lg bg-blue-600 text-white py-2 text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
+              >
+                {uploading ? "Uploading..." : "Upload Audio"}
+              </button>
+            )}
+
           </div>
         </div>
 
@@ -106,18 +146,37 @@ useEffect(() => {
               hidden
               onChange={(e) => setDocFile(e.target.files?.[0] || null)}
             />
+
+            {docFile && (
+              <button
+                onClick={() => uploadFile(docFile)}
+                disabled={uploading}
+                className="mt-4 w-full rounded-lg bg-purple-600 text-white py-2 text-sm font-medium hover:bg-purple-700 disabled:opacity-50"
+              >
+                {uploading ? "Uploading..." : "Upload Document"}
+              </button>
+            )}
+
           </div>
         </div>
       </div>
 
-        {backendStatus && (
-  <p className="text-xs text-gray-500">
-    Backend status: {backendStatus}
-  </p>
-)}
+      {message && (
+        <p className="text-sm text-green-600 font-medium">
+          {message}
+        </p>
+      )}
+      
+      {backendStatus && (
+        <p className="text-xs text-gray-500">
+          Backend status: {backendStatus}
+        </p>
+      )}
       <p className="text-sm text-gray-500">
         Supported formats: MP3, WAV, PDF, TXT · Files are processed securely.
       </p>
+
+
     </div>
   );
 }
