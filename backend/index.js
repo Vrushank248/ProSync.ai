@@ -5,7 +5,7 @@ import fs from "fs";
 import "dotenv/config";
 import { addToMemory, getMemoryContext } from "./memoryStore.js";
 import { processWithAI, transcribeAudio } from "./aiProcessor.js";
-
+import { generateSummaryPDF } from "./pdfExporter.js";
 
 const app = express();
 
@@ -134,6 +134,25 @@ ${question}
     res.status(500).json({ error: "Chat failed" });
   }
 });
+
+// export 
+app.get("/export", (req, res) => {
+  const memory = getMemoryContext();
+
+  if (!memory) {
+    return res.status(400).json({
+      error: "No project memory available to export",
+    });
+  }
+
+  generateSummaryPDF(
+    res,
+    "Uploaded Documents & Meetings",
+    memory,
+    []
+  );
+});
+
 
 // memory
 

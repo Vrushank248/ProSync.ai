@@ -17,7 +17,12 @@ export default function MemoryPage() {
       <p className="text-gray-600 mb-6">
         Everything ProSync.ai currently knows about your project.
       </p>
-
+      <a
+        href="http://localhost:5000/export"
+        className="inline-block mb-4 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+      >
+        Export Summary PDF
+      </a>
       <div className="border rounded-lg p-6 bg-white">
         {memory ? (
           <pre className="whitespace-pre-wrap text-sm text-gray-800">
