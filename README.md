@@ -84,7 +84,7 @@ Oumi Docs: https://www.oumi.ai/docs
 
 The frontend is deployed on Vercel using Next.js. Vercel provides fast global delivery, continuous deployment from GitHub, and a clean separation between frontend and backend services.
 
-Live Demo: [Add your Vercel URL here]
+Live Demo: https://prosyncai.vercel.app/
 
 Vercel Docs: https://vercel.com/docs
 
@@ -106,6 +106,17 @@ Vercel Docs: https://vercel.com/docs
 
 - Home Page
 ![Home Page](./images/home-page.png)
+- Upload Page
+![Upload Page](./images/upload-page.png)
+- Chat Page
+![Chat Page](./images/chat-page.png)
+- Summary Page
+![Memory Page](./images/summary-page.png)
+- OUMI
+![OUMI](./images/oumi.png)
+- Kestra
+![Kestra](./images/kestra1.png)
+![Kestra](./images/kestra2.png)
 ---
 
 ## Tech Stack
@@ -120,7 +131,8 @@ Backend
 - Node.js  
 - Express  
 - PDF and audio processing  
-- AI APIs  
+- AI APIs
+- Python  
 
 AI and Workflow  
 - Oumi (evaluation)  
@@ -153,5 +165,4 @@ Knowledge is persistent and reusable
 Designed for real-world usage and improvement
 
 License
-
 MIT
