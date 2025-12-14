@@ -3,9 +3,11 @@ import cors from "cors";
 import multer from "multer";
 import fs from "fs";
 import "dotenv/config";
-import { addToMemory, getMemoryContext } from "./memoryStore.js";
+
+import { getMemory, addToMemory, getMemoryContext } from "./memoryStore.js";
 import { processWithAI, transcribeAudio } from "./aiProcessor.js";
 import { generateSummaryPDF } from "./pdfExporter.js";
+import { runOumiEvaluation } from "./oumi_eval/run_eval.js";
 
 const app = express();
 
@@ -31,7 +33,7 @@ app.get("/", (req, res) => {
   res.json({ status: "ProSync backend running" });
 });
 
-// ---------------- UPLOAD ENDPOINT (STEP 9 + STEP 10) ----------------
+// ---------------- UPLOAD ENDPOINT ----------------
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
@@ -46,30 +48,27 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     let extractedText = "";
 
-    // ---------- PDF TEXT EXTRACTION (STEP 9) ----------
+    // ---------- PDF ----------
     if (mimeType === "application/pdf") {
       const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
-
       const data = new Uint8Array(fs.readFileSync(filePath));
       const pdf = await pdfjsLib.getDocument({ data }).promise;
 
       let text = "";
-
       for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
         const content = await page.getTextContent();
         text += content.items.map(item => item.str).join(" ") + "\n";
       }
-
       extractedText = text;
     }
 
-    // ---------- TXT EXTRACTION ----------
+    // ---------- TEXT ----------
     else if (mimeType.startsWith("text/")) {
       extractedText = fs.readFileSync(filePath, "utf-8");
     }
 
-    // ---------- AUDIO TRANSCRIPTION ----------
+    // ---------- AUDIO ----------
     else if (mimeType.startsWith("audio/")) {
       console.log("Transcribing audio...");
       extractedText = await transcribeAudio(filePath);
@@ -77,21 +76,43 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     console.log("Extracted text length:", extractedText.length);
 
-    // ---------- AI SUMMARIZATION (STEP 10) ----------
+    // ---------- AI SUMMARY ----------
     const aiResult = await processWithAI(extractedText);
+
+    // ---------- SAVE FOR OUMI ----------
+    fs.writeFileSync(
+      "oumi_eval/eval_artifacts/source.txt",
+      extractedText,
+      "utf-8"
+    );
+    fs.writeFileSync(
+      "oumi_eval/eval_artifacts/summary.txt",
+      aiResult.summary,
+      "utf-8"
+    );
+
+    // ---------- RUN OUMI ----------
+    const evalScores = await runOumiEvaluation();
+
+    // ---------- MEMORY ----------
     addToMemory({
       fileName: req.file.originalname,
       summary: aiResult.summary,
       keyPoints: aiResult.keyPoints,
+      evaluation: evalScores,
     });
+
+    // ---------- RESPONSE ----------
     res.json({
-      message: "File uploaded, text extracted & summarized",
+      message: "File uploaded, summarized & evaluated",
       fileName: req.file.filename,
       fileType: mimeType,
       textLength: extractedText.length,
       summary: aiResult.summary,
       keyPoints: aiResult.keyPoints,
+      evaluation: evalScores,
     });
+
   } catch (error) {
     console.error("Upload error:", error);
     res.status(500).json({
@@ -101,11 +122,11 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 
-// Chat
+// ---------------- CHAT ----------------
+
 app.post("/chat", async (req, res) => {
   try {
     const { question } = req.body;
-
     if (!question) {
       return res.status(400).json({ error: "Question is required" });
     }
@@ -113,53 +134,58 @@ app.post("/chat", async (req, res) => {
     const context = getMemoryContext();
 
     const prompt = `
-You are ProSync.ai, a project-aware assistant.
+You are ProSync.ai.
 
-Use ONLY the following project context to answer.
+Use ONLY the following project context.
 
-Project Context:
 ${context}
 
-User Question:
+Question:
 ${question}
 `;
 
     const aiResult = await processWithAI(prompt);
 
-    res.json({
-      answer: aiResult.summary,
-    });
+    res.json({ answer: aiResult.summary });
   } catch (error) {
     console.error("Chat error:", error);
     res.status(500).json({ error: "Chat failed" });
   }
 });
 
-// export 
+// ---------------- EXPORT ----------------
+
 app.get("/export", (req, res) => {
-  const memory = getMemoryContext();
+  try {
+    const memory = getMemoryContext();
 
-  if (!memory) {
-    return res.status(400).json({
-      error: "No project memory available to export",
-    });
+    if (!memory) {
+      return res.status(400).json({
+        error: "No project memory available to export",
+      });
+    }
+
+    generateSummaryPDF(
+      res,
+      "Uploaded Documents & Meetings",
+      memory,
+      []
+    );
+
+    return;
+  } catch (err) {
+    console.error("Export error:", err);
+
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Export failed" });
+    }
   }
-
-  generateSummaryPDF(
-    res,
-    "Uploaded Documents & Meetings",
-    memory,
-    []
-  );
 });
 
-
-// memory
+// ---------------- MEMORY ----------------
 
 app.get("/memory", (req, res) => {
-  res.json({
-    memory: getMemoryContext(),
-  });
+  res.json({ memory: getMemory() });
 });
 
 // ---------------- SERVER ----------------

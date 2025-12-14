@@ -1,0 +1,22 @@
+{
+  "model_name": "gpt-4o",
+  "adapter_model": null,
+  "tokenizer_name": null,
+  "tokenizer_pad_token": null,
+  "tokenizer_kwargs": {},
+  "processor_kwargs": {},
+  "model_max_length": null,
+  "load_pretrained_weights": true,
+  "trust_remote_code": true,
+  "torch_dtype_str": "auto",
+  "compile": false,
+  "chat_template": null,
+  "chat_template_kwargs": null,
+  "attn_implementation": null,
+  "device_map": "auto",
+  "model_kwargs": {},
+  "enable_liger_kernel": false,
+  "shard_for_eval": false,
+  "freeze_layers": [],
+  "model_revision": null
+}

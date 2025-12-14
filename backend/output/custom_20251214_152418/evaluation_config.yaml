@@ -1,0 +1,45 @@
+tasks: []
+model:
+  model_name: gpt-4o
+  adapter_model: null
+  tokenizer_name: null
+  tokenizer_pad_token: null
+  tokenizer_kwargs: {}
+  processor_kwargs: {}
+  model_max_length: null
+  load_pretrained_weights: true
+  trust_remote_code: true
+  torch_dtype_str: auto
+  compile: false
+  chat_template: null
+  chat_template_kwargs: null
+  attn_implementation: null
+  device_map: auto
+  model_kwargs: {}
+  enable_liger_kernel: false
+  shard_for_eval: false
+  freeze_layers: []
+  model_revision: null
+generation:
+  max_new_tokens: 1024
+  batch_size: 1
+  exclude_prompt_from_response: true
+  seed: null
+  temperature: 0.0
+  top_p: 1.0
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+  stop_strings: null
+  stop_token_ids: null
+  logit_bias: {}
+  min_p: 0.0
+  use_cache: false
+  num_beams: 1
+  use_sampling: false
+  guided_decoding: null
+  skip_special_tokens: true
+inference_engine: OPENAI
+inference_remote_params: null
+run_name: null
+enable_wandb: false
+output_dir: output

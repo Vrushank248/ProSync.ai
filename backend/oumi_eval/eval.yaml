@@ -1,0 +1,15 @@
+model:
+  model_name: "gpt-4o"
+  trust_remote_code: true
+
+inference_engine: OPENAI
+
+generation:
+  max_new_tokens: 1024
+  temperature: 0.0
+
+tasks:
+  - evaluation_backend: custom
+    task_name: prosync_summary_eval
+
+output_dir: "output"

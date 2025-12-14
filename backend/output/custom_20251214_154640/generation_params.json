@@ -1,0 +1,19 @@
+{
+  "max_new_tokens": 1024,
+  "batch_size": 1,
+  "exclude_prompt_from_response": true,
+  "seed": null,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "stop_strings": null,
+  "stop_token_ids": null,
+  "logit_bias": {},
+  "min_p": 0.0,
+  "use_cache": false,
+  "num_beams": 1,
+  "use_sampling": false,
+  "guided_decoding": null,
+  "skip_special_tokens": true
+}

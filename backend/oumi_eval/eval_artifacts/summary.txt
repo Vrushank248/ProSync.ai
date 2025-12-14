@@ -1,0 +1,12 @@
+**Project Summary:**
+
+Adobe Acrobat PDF Files is a universal file format that preserves the fonts, formatting, colors, and graphics of any source document, regardless of the application and platform used to create it. This format is ideal for electronic document distribution as it overcomes the problems commonly encountered with electronic file sharing.
+
+**Key Points:**
+
+* Anyone can open a PDF file with the free Adobe Acrobat Reader, regardless of the application used to create the document.
+* PDF files always print correctly on any printing device.
+* PDF files display exactly as created, regardless of fonts, software, and operating systems.
+* The free Acrobat Reader is easy to download and can be freely distributed by anyone.
+* PDF files are compact and smaller than their source files, making them ideal for fast display on the Web.
+* PDF files can be downloaded a page at a time, making them suitable for web-based document sharing.

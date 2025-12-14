@@ -1,10 +1,9 @@
 /**
  * Simple in-memory project memory store
- * Can be replaced later with DB / vector store
  */
 
 const projectMemory = {
-  documents: [], // summaries + metadata
+  documents: [],
 };
 
 export function addToMemory(entry) {
@@ -13,11 +12,23 @@ export function addToMemory(entry) {
 
 export function getMemoryContext() {
   return projectMemory.documents
-    .map(
-      (doc, index) =>
-        `Document ${index + 1}:\nSummary:\n${doc.summary}\nKey Points:\n${doc.keyPoints.join(
-          ", "
-        )}`
-    )
-    .join("\n\n");
+    .map((doc, index) => {
+      let block = `Document ${index + 1}:\nSummary:\n${doc.summary}\nKey Points:\n${doc.keyPoints.join(
+        ", "
+      )}`;
+
+      if (doc.evaluation) {
+        block += `\n\nEvaluation Metrics:
+- Faithfulness: ${doc.evaluation.faithfulness}
+- Relevance: ${doc.evaluation.relevance}
+- Completeness: ${doc.evaluation.completeness}`;
+      }
+
+      return block;
+    })
+    .join("\n\n-------------------\n\n");
+}
+
+export function getMemory() {
+  return projectMemory.documents;
 }
