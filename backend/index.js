@@ -188,9 +188,33 @@ app.get("/memory", (req, res) => {
   res.json({ memory: getMemory() });
 });
 
+
+// kestra 
+
+app.post("/kestra/process", async (req, res) => {
+  try {
+    const { source, type } = req.body;
+
+    if (!source || !type) {
+      return res.status(400).json({ error: "Invalid Kestra payload" });
+    }
+
+    console.log("Kestra workflow triggered:", source, type);
+
+    // For now just acknowledge (later: trigger pipelines, cleanup, exports, etc.)
+    res.json({
+      status: "Kestra workflow processed",
+      source,
+      type,
+    });
+  } catch (err) {
+    console.error("Kestra error:", err);
+    res.status(500).json({ error: "Kestra processing failed" });
+  }
+});
 // ---------------- SERVER ----------------
 
 const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Backend running on http://0.0.0.0:${PORT}`);
 });
