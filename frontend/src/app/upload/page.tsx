@@ -167,11 +167,6 @@ export default function UploadPage() {
         </p>
       )}
       
-      {backendStatus && (
-        <p className="text-xs text-gray-500">
-          Backend status: {backendStatus}
-        </p>
-      )}
       <p className="text-sm text-gray-500">
         Supported formats: MP3, WAV, PDF, TXT · Files are processed securely.
       </p>

@@ -1,0 +1,10 @@
+{
+  "results": {
+    "prosync_summary_eval": {
+      "faithfulness": 0.85,
+      "relevance": 0.8,
+      "completeness": 0.78
+    }
+  },
+  "start_time": "20251214_211614"
+}

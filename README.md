@@ -104,15 +104,8 @@ Vercel Docs: https://vercel.com/docs
 
 ## Screenshots
 
-Add screenshots to visually demonstrate the system.
-
-- Upload and summary UI  
-- Memory view with evaluation metrics  
-- Kestra execution view  
-- Exported PDF preview  
-
-Example:
-
+- Home Page
+![Home Page](./images/home-page.png)
 ---
 
 ## Tech Stack
@@ -147,6 +140,7 @@ npm run dev
 cd backend
 npm install
 node index.js
+```
 
 What Makes ProSync.ai Different
 
