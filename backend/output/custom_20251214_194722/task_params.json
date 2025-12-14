@@ -1,0 +1,7 @@
+{
+  "evaluation_backend": "custom",
+  "task_name": "prosync_summary_eval",
+  "num_samples": null,
+  "log_samples": false,
+  "eval_kwargs": {}
+}
