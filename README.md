@@ -115,8 +115,9 @@ Vercel Docs: https://vercel.com/docs
 - OUMI
 ![OUMI](./images/oumi.png)
 - Kestra
-![Kestra](./images/kestra1.png)
-![Kestra](./images/kestra2.png)
+![Kestra1](./images/kestra1.png)
+
+![Kestra2](./images/Kestra2.png)
 ---
 
 ## Tech Stack
